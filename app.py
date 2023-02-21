@@ -27,7 +27,7 @@ users = [
 ]
 
 
-@app.route('/client', methods=['GET'])
+@app.route('/login', methods=['GET'])
 def client():
     return render_template('client.html')
 
@@ -64,7 +64,7 @@ def login():
     token = jwt.encode({'id': user['id']}, app.config['SECRET_KEY'], algorithm='HS256')
 
     # Return the JWT token to the client
-    return jsonify({'token': token.encode().decode('UTF-8')})
+    return jsonify({'token': token.encode().decode('UTF-8')}), 200
 
 
 if __name__ == '__main__':
