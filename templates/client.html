@@ -77,8 +77,8 @@
     })
     .then(data => {
       if (data.token) {
-        // Store the token in localStoragee
-        localStorage.setItem('token', data.token);
+        // Store the token in sessionStorage
+        sessionStorage.setItem('token', data.token);
 
         // Redirect to the dashboard
         window.location.href = '/dashboard';
