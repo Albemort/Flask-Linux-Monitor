@@ -10,7 +10,7 @@ getdata = Monitor()
 # Secret key for JWT
 app.config['SECRET_KEY'] = 'secret_key'
 
-
+# Just for testing purposes
 users = [
     {
         'id': 1,
@@ -27,7 +27,7 @@ users = [
 
 @app.route('/login', methods=['GET'])
 def client():
-    return render_template('client.html')
+    return render_template('login.html')
 
 @app.route('/dashboard', methods=['GET'])
 def dash():
