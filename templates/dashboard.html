@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <body>
+      <div class="sala" id="sala">
+        <p>Salainen teksti.</p>
+      </div>
+
+      <script>
+        document.getElementById("sala").style.display = "none";
+        // Check if the JWT token exists in localStorage
+        const Token = sessionStorage.getItem('token');
+
+
+        if (Token) {
+          // Token exists, allow access to the protected resource
+          // For example, show the dashboarda
+          document.getElementById('sala').style.display = 'block';
+        } else {
+          // Token does not exist, redirect to the login page
+          window.location.href = '/login';
+        }
+      </script>
+  </body>
+</html>
