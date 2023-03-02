@@ -1,6 +1,4 @@
-import json
-from flask import Flask, jsonify, request, render_template, url_for
-from functools import wraps
+from flask import Flask, jsonify, request, render_template
 import jwt
 from read import readfile
 from monitor import Monitor
