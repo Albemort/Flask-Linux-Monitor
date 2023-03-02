@@ -8,7 +8,7 @@
       <script>
         document.getElementById("sala").style.display = "none";
         // Check if the JWT token exists in localStorage
-        const Token = localStorage.getItem('token');
+        const Token = sessionStorage.getItem('token');
 
 
         if (Token) {
