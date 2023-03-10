@@ -1,29 +1,47 @@
 from flask import Flask, jsonify, request, render_template
 import jwt
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 from read import readfile
 from monitor import Monitor
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///userdb.db'
+db = SQLAlchemy(app)
 data = readfile()
 getdata = Monitor()
 
 # Secret key for JWT
 app.config['SECRET_KEY'] = 'secret_key'
 
-# Just for testing purposes
-users = [
-    {
-        'id': 1,
-        'username': 'john',
-        'password': 'password1'
-    },
-    {
-        'id': 2,
-        'username': 'jane',
-        'password': 'password2'
-    }
-]
+class User(db.Model):
+    __tablename__ = 'login-users'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(200), primary_key=False, unique=False, nullable=False)
 
+    def set_password(self, password):
+        """Create hashed password."""
+        self.password = generate_password_hash(password, method='sha256')
+
+    def check_password(self, password):
+        """Check hashed password."""
+        return check_password_hash(self.password, password)
+    
+    def __init__(self, name):
+        self.name = name
+
+with app.app_context():
+    db.create_all() 
+
+    user = User(
+    name="admin"
+    )
+
+    user.set_password("password")
+
+    db.session.add(user)
+    db.session.commit()
 
 @app.route('/login', methods=['GET'])
 def client():
@@ -52,14 +70,14 @@ def login():
     password = request.json.get('password', None)
 
     # Find the user with the matching credentials
-    user = next((user for user in users if user['username'] == username and user['password'] == password), None)
+    user = User.query.filter_by(name=username).first()
 
     # If user is not found, return a 401 response
-    if not user:
+    if not user or not check_password_hash(user.password, password):
         return jsonify({'message': 'Invalid credentials'}), 401
 
     # Create a JWT token with the user ID as the payload
-    token = jwt.encode({'id': user['id']}, app.config['SECRET_KEY'], algorithm='HS256')
+    token = jwt.encode({'id': user.id}, app.config['SECRET_KEY'], algorithm='HS256')
 
     # Return the JWT token to the client
     return jsonify({'token': token.encode().decode('UTF-8')}), 200
