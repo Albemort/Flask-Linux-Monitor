@@ -1,4 +1,5 @@
 import os
+import platform
 import subprocess
 import shutil
 import json
@@ -8,15 +9,27 @@ class Monitor:
         ## Dictionary for the values
         statistics = {}
 
+        os_name = platform.platform()
+        statistics['OS'] = os_name
+
+        uptime = os.popen("uptime -s").read().split('\n').pop(0)
+
+        statistics['uptime'] = uptime
+
+        cpu = os.popen("grep -m 1 'model name' /proc/cpuinfo").read().split(': ').pop(-1).split('\n').pop(0)
         ## Get the amount of cpu's
         physical_and_logical_cpu_count = os.cpu_count()
-        ## Dump the cpu count to dictionary
-        statistics['physical_and_logical_cpu_count'] = physical_and_logical_cpu_count
 
         ## Current cpu load %
         cpu_load = [x / os.cpu_count() * 100 for x in os.getloadavg()][-1]
-        ## Dump the cpu_load into dictionary
-        statistics['cpu_load (%)'] = round(cpu_load)
+
+        statistics['CPU'] = dict(
+            {
+                'cpu_name': cpu,
+                'physical_and_logical_cpu_count': physical_and_logical_cpu_count,
+                'cpu_load': round(cpu_load)
+            }
+        )
 
         ## Linux command free -t -m to get the ram info
         total_ram, used_ram, free_ram = map(
@@ -40,10 +53,9 @@ class Monitor:
                 'free_disk_space': round(free / 1024 ** 3, 1)
             }
         )
-
-        ## Ping google.com to get the ping results
-        ping_result = subprocess.run(['ping', '-i 5', '-c 5', 'google.com'], stdout=subprocess.PIPE).stdout.decode(
-            'utf-8').split('\n')
+        
+        ping_result = subprocess.run(['ping', '-i 1', '-c 3', 'google.com'], stdout=subprocess.PIPE).stdout.decode(
+        'utf-8').split('\n')
 
         ## Get the right variables
         min, avg, max = ping_result[-2].split('=')[-1].split('/')[:3]
