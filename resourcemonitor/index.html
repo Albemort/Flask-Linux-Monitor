@@ -10,6 +10,43 @@
     <title>Monitor</title>
     <link href="C:\Users\erich\Downloads\bootstrap-3.4.1-dist\css\bootstrap.min.css" rel="stylesheet">
     <link href="C:\Users\erich\Downloads\resourcemonitor\dashboard.css" rel="stylesheet">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['gauge']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+          var data = google.visualization.arrayToDataTable([
+            ['Label', 'Value'],
+            ['CPU', 55],
+          ]);
+
+          var options = {
+            width: 400, height: 120,
+            redFrom: 90, redTo: 100,
+            yellowFrom:75, yellowTo: 90,
+            minorTicks: 5
+          };
+
+          var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+
+          chart.draw(data, options);
+
+          setInterval(function() {
+            data.setValue(0, 1, 40 + Math.round(60 * Math.random()));
+            chart.draw(data, options);
+          }, 13000);
+          setInterval(function() {
+            data.setValue(1, 1, 40 + Math.round(60 * Math.random()));
+            chart.draw(data, options);
+          }, 5000);
+          setInterval(function() {
+            data.setValue(2, 1, 60 + Math.round(20 * Math.random()));
+            chart.draw(data, options);
+          }, 26000);
+        }
+     </script>
 
   </head>
 
@@ -50,50 +87,72 @@
           <h1 class="page-header">Dashboard</h1>
 
           <div class="row placeholders">
-            <div class="gaugeplaceholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="400" height="400" class="img-responsive" alt="Generic placeholder thumbnail">
+            <div class="img placeholder" id="chart_div">
+              <!--<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="400" height="400" class="img-responsive" alt="Generic placeholder thumbnail">-->
               <h4>Label</h4>
               <span class="text-muted">Mittari1</span>
             </div>
-            <div class="gaugeplaceholder">
+            <div class="img placeholder">
               <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="400" height="400" class="img-responsive" alt="Generic placeholder thumbnail">
               <h4>Label</h4>
               <span class="text-muted">Mittari2</span>
             </div>
 
-          <h2 class="sub-header">Section title</h2>
+          <h2 class="sub-header">System information</h2>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
+                  <th>CPU</th>
+                  <th>Core count</th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>1,001</td>
-                  <td>Lorem</td>
-                  <td>ipsum</td>
-                  <td>dolor</td>
-                  <td>sit</td>
+                  <td>Intel(R) Core(TM) i5-4690K CPU @ 3.50GHz</td>
+                  <td>4</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
                 </tr>
+              </tbody>
+              <thead>
                 <tr>
-                  <td>1,002</td>
-                  <td>amet</td>
-                  <td>consectetur</td>
-                  <td>adipiscing</td>
-                  <td>elit</td>
+                  <th>Total RAM</th>
+                  <th>Used RAM</th>
+                  <th>Free RAM</th>
+                  <th></th>
+                  <th></th>
                 </tr>
+              </thead>
+              <tbody>
                 <tr>
-                  <td>1,003</td>
-                  <td>Integer</td>
-                  <td>nec</td>
-                  <td>odio</td>
-                  <td>Praesent</td>
+                  <td>16 Gb</td>
+                  <td>2,92 Gb</td>
+                  <td>13,08 Gb</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+              <thead>
+                <tr>
+                  <th>Total disk space</th>
+                  <th>Used disk space</th>
+                  <th>Free disk space</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>217,6 Gb</td>
+                  <td>76,5 Gb</td>
+                  <td>129,9 Gb</td>
+                  <td></td>
+                  <td></td>
                 </tr>
               </tbody>
             </table>
