@@ -61,18 +61,16 @@ body {
 
 .placeholders {
   margin-bottom: 30px;
-  text-align: center;
 }
 .placeholders h4 {
   margin-bottom: 0;
 }
 .placeholder {
   margin-bottom: 20px;
+  text-align: center;
 }
 .placeholder img {
   display: inline-block;
   border-radius: 50%;
-}
-.gaugeplaceholder {
-  align-items: center;
+  text-align: center;
 }
