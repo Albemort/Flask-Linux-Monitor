@@ -51,6 +51,10 @@ def client():
 def dash():
     return render_template('dashboard.html')
 
+@app.route('/', methods=['GET'])
+def index():
+    return redirect(url_for('client'))
+
 @app.route('/result', methods=['GET'])
 def result():
     data.__init__()
