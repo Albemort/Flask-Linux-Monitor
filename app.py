@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, redirect, url_for
 import jwt
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -47,7 +47,7 @@ with app.app_context():
 def client():
     return render_template('login.html')
 
-@app.route('/dashboard' and '/', methods=['GET'])
+@app.route('/dashboard', methods=['GET'])
 def dash():
     return render_template('dashboard.html')
 
