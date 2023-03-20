@@ -47,7 +47,7 @@ with app.app_context():
 def client():
     return render_template('login.html')
 
-@app.route('/dashboard', methods=['GET'])
+@app.route('/dashboard' and '/', methods=['GET'])
 def dash():
     return render_template('dashboard.html')
 
