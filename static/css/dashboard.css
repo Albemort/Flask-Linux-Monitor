@@ -69,8 +69,8 @@ body {
   margin-bottom: 20px;
   text-align: center;
 }
-.placeholder img {
+.chart {
   display: inline-block;
   border-radius: 50%;
-  text-align: center;
+  margin: 0 auto;
 }
