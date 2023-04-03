@@ -36,7 +36,7 @@ class Monitor:
             int, os.popen('free -t -m').readlines()[-1].split()[1:])
 
         ## Dump ram info to the dictionary
-        statistics['ram (Gb)'] = dict({
+        statistics['ram'] = dict({
             'total_ram': round((total_ram / 1024), 2),
             'used_ram': round((used_ram / 1024), 2),
             'free_ram': round((free_ram / 1024), 2)
@@ -46,7 +46,7 @@ class Monitor:
         total, used, free = shutil.disk_usage("/")
 
         ## Dump disk info to dictionary
-        statistics['disk (Gb)'] = dict(
+        statistics['disk'] = dict(
             {
                 'total_disk_space': round(total / 1024 ** 3, 1),
                 'used_disk_space': round(used / 1024 ** 3, 1),
@@ -61,7 +61,7 @@ class Monitor:
         min, avg, max = ping_result[-2].split('=')[-1].split('/')[:3]
 
         ## Dump the latency to dictionary
-        statistics['network_latency (ms)'] = dict(
+        statistics['network_latency'] = dict(
             {
                 'min': float(min.strip()),
                 'avg': float(avg.strip()),
