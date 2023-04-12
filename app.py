@@ -14,7 +14,9 @@ getdata = Monitor()
 # Secret key for JWT
 app.config['SECRET_KEY'] = 'secret_key'
 
+## Class for the users database
 class User(db.Model):
+    # Create the table and columns.
     __tablename__ = 'login-users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
@@ -35,31 +37,37 @@ with app.app_context():
     db.create_all() 
 
     user = User(
-    name="admin"
+    name="admin" # Default username
     )
 
-    user.set_password("password")
+    user.set_password("password") # Default password
 
     db.session.add(user)
     db.session.commit()
 
+## Route for login page
 @app.route('/login', methods=['GET'])
 def client():
     return render_template('login.html')
 
+## Route for dashboard page
 @app.route('/dashboard', methods=['GET'])
 def dash():
     return render_template('dashboard.html')
 
+## Route for index page and redirect to login page
 @app.route('/', methods=['GET'])
 def index():
     return redirect(url_for('client'))
 
+## Get the content from the json file.
+## Calls read.py
 @app.route('/result', methods=['GET'])
 def result():
     data.__init__()
     return data.measurements
 
+## Get new data from the linux server as a POST req
 @app.route('/result/refresh', methods=['POST'])
 def refresh():
     getdata.get_statistics()
@@ -76,7 +84,7 @@ def login():
     # Find the user with the matching credentials
     user = User.query.filter_by(name=username).first()
 
-    # If user is not found, return a 401 response
+    # If user is not found or wrong password, return a 401 response
     if not user or not check_password_hash(user.password, password):
         return jsonify({'message': 'Invalid credentials'}), 401
 

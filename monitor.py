@@ -54,10 +54,11 @@ class Monitor:
             }
         )
         
+        ## Ping google.com 3 times.
         ping_result = subprocess.run(['ping', '-i 1', '-c 3', 'google.com'], stdout=subprocess.PIPE).stdout.decode(
         'utf-8').split('\n')
 
-        ## Get the right variables
+        ## Get the right variables from the ping
         min, avg, max = ping_result[-2].split('=')[-1].split('/')[:3]
 
         ## Dump the latency to dictionary
@@ -68,5 +69,7 @@ class Monitor:
                 'max': float(max.strip())
             }
         )
+        
+        ## Write dictionary to json file
         with open('result.json', 'w') as f:
             json.dump(statistics, f)
