@@ -11,71 +11,24 @@
     <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{url_for('static', filename='css/dashboard.css')}}" rel="stylesheet">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-        // Check if the JWT token exists in localStorage
-        const Token = sessionStorage.getItem('token');
+    <script>
+      // Check if the JWT token exists in localStorage
+      const Token = sessionStorage.getItem('token');
 
 
-        if (!Token) {
+      if (!Token) {
           window.location.href = '/login';
-        }
+      }
     </script>
     <script>
-      fetch('../result.json')
-        .then(res => res.json())
-        .then(measdata => console.log(JSON.parse(measdata)))
-        document.getElementById("opsys").innerHTML = measdata.OS
-        document.getElementById("uptime").innerHTML = measdata.uptime
-        document.getElementById("cpuname").innerHTML = measdata.cpu_name
-        document.getElementById("cores").innerHTML = measdata.physical_and_logical_cpu_count
-        document.getElementById("totram").innerHTML = measdata.total_ram
-        document.getElementById("useram").innerHTML = measdata.used_ram
-        document.getElementById("freeram").innerHTML = measdata.free_ram
-        document.getElementById("totdisk").innerHTML = measdata.total_disk_space
-        document.getElementById("usedisk").innerHTML = measdata.used_disk_space
-        document.getElementById("freedisk").innerHTML = measdata.free_disk_space
-     </script>
-    <script type="text/javascript">
-        google.charts.load('current', {'packages':['gauge']});
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-
-          var data = google.visualization.arrayToDataTable([
-            ['Label', 'Value'],
-            ['CPU', 55],
-          ]);
-
-          var options = {
-            width: 400, height: 120,
-            redFrom: 90, redTo: 100,
-            yellowFrom:75, yellowTo: 90,
-            minorTicks: 5
-          };
-
-          var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
-
-          chart.draw(data, options);
-
-          setInterval(function() {
-            data.setValue(0, 1, 40 + Math.round(60 * Math.random()));
-            chart.draw(data, options);
-          }, 13000);
-          setInterval(function() {
-            data.setValue(1, 1, 40 + Math.round(60 * Math.random()));
-            chart.draw(data, options);
-          }, 5000);
-          setInterval(function() {
-            data.setValue(2, 1, 60 + Math.round(20 * Math.random()));
-            chart.draw(data, options);
-          }, 26000);
-        }
-     </script>
-
+      function logout() {
+        sessionStorage.clear();
+        window.location.reload();
+      }
+    </script>
   </head>
 
   <body>
-
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -85,16 +38,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Linux Resource Monitor</a>
+          <a class="navbar-brand" href="#">Linux Server Monitor</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Main</a></li>
-            <li><a href="#">Settings</a></li>
+            <button type="button" onclick="logout()" class="btn btn-default btn-lg">Logout</button>
           </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
         </div>
       </div>
     </nav>
@@ -104,87 +53,103 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">Tyhjä</a></li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">Dashboard</h1>
 
-          <div class="row placeholders">
-            <div class="chart" id="chart_div">
-              <!--<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="400" height="400" class="img-responsive" alt="Generic placeholder thumbnail">-->
-              <h4>Label</h4>
-              <span class="text-muted">Mittari1</span>
-            </div>
-
           <h2 class="sub-header">System information</h2>
           <div class="table-responsive">
-            <h4 id="opsys">Operating System: Linux-4.19.0-23-amd64-x86_64-with-debian-10.13</h4>
-            <h4 id="uptime">Uptime: 2023-03-10 10:25:09</h4>
+            <h4 id="opsys"></h4>
+            <h4 id="uptime"></h4>
             <table class="table table-striped">
               <thead>
                 <tr>
                   <th>CPU</th>
+                  <th>Name</th>
                   <th>Core count</th>
-                  <th></th>
-                  <th></th>
+                  <th>CPU Load (%)</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td id="cpuname">Intel(R) Core(TM) i5-4690K CPU @ 3.50GHz</td>
-                  <td id="cores">4</td>
                   <td></td>
-                  <td></td>
+                  <td id="cpuname"></td>
+                  <td id="cores"></td>
+                  <td id="cpuload"></td>
                   <td></td>
                 </tr>
               </tbody>
               <thead>
                 <tr>
+                  <th>RAM (Gb)</th>
                   <th>Total RAM</th>
                   <th>Used RAM</th>
                   <th>Free RAM</th>
                   <th></th>
-                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td id="totram">16 Gb</td>
-                  <td id="useram">2,92 Gb</td>
-                  <td id="freeram">13,08 Gb</td>
                   <td></td>
+                  <td id="totram"></td>
+                  <td id="useram"></td>
+                  <td id="freeram"></td>
                   <td></td>
                 </tr>
               </tbody>
               <thead>
                 <tr>
+                  <th>Disk (Gb)</th>
                   <th>Total disk space</th>
                   <th>Used disk space</th>
                   <th>Free disk space</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td id="totdisk"></td>
+                  <td id="usedisk"></td>
+                  <td id="freedisk"></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th>Network latency (ms)</th>
+                  <th>Min</th>
+                  <th>Max</th>
+                  <th>Avg</th>
                   <th></th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td id="totdisk">217,6 Gb</td>
-                  <td id="usedisk">76,5 Gb</td>
-                  <td id="freedisk">129,9 Gb</td>
                   <td></td>
+                  <td id="minlat"></td>
+                  <td id="maxlat"></td>
+                  <td id="avglat"></td>
                   <td></td>
                 </tr>
               </tbody>
             </table>
           </div>
+          <div class="row placeholders">
+            <div class="refresh">
+              <ul class="nav navbar-nav navbar-left">
+                <button type="button" onclick="" class="btn btn-primary">Refresh</button>
+              </ul>
+            </div>
         </div>
       </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="./js/jquery.min.js"><\/script>')</script>
-    <script src="./js/bootstrap.min.js"></script>
-    <script src="./js/holder.min.js"></script>
+    <script>window.jQuery || document.write('<script src="./static/js/jquery.min.js"><\/script>')</script>
+    <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/holder.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/dashboard.js')}}"></script>
   </body>
 </html>
