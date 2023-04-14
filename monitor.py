@@ -69,3 +69,6 @@ class Monitor:
                 'max': float(max.strip())
             }
         )
+
+        with open('result.json', 'w') as f:
+            json.dump(statistics, f)

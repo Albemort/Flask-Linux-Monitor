@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request, render_template, redirect, url_for
-import jwt
 from flask_sqlalchemy import SQLAlchemy
+import jwt
 from werkzeug.security import generate_password_hash, check_password_hash
 from read import readfile
 from monitor import Monitor
@@ -8,8 +8,9 @@ from monitor import Monitor
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///userdb.db'
 db = SQLAlchemy(app)
-data = readfile()
 getdata = Monitor()
+getdata.get_statistics()
+data = readfile()
 
 # Secret key for JWT
 app.config['SECRET_KEY'] = 'secret_key'
@@ -19,7 +20,7 @@ class User(db.Model):
     # Create the table and columns.
     __tablename__ = 'login-users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(100), unique=True, nullable=False)
+    name = db.Column(db.String(100), unique=False, nullable=False)
     password = db.Column(db.String(200), primary_key=False, unique=False, nullable=False)
 
     def set_password(self, password):
@@ -29,11 +30,11 @@ class User(db.Model):
     def check_password(self, password):
         """Check hashed password."""
         return check_password_hash(self.password, password)
-    
-    def __init__(self, name):
-        self.name = name
 
 with app.app_context():
+    db.session.query(User).delete()
+    db.session.commit()
+
     db.create_all() 
 
     user = User(
