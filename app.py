@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///userdb.db'
 db = SQLAlchemy(app)
 getdata = Monitor()
-#getdata.get_statistics()
+getdata.get_statistics()
 data = readfile()
 
 # Secret key for JWT
