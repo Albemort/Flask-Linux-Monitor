@@ -1,4 +1,10 @@
-fetch('/result')
+async function getData(){
+    $.ajax({
+        url: '/result/refresh',
+        type: 'POST',
+    })
+
+    fetch('/result')
     .then(res => res.json())
     .then(measdata => {
     document.getElementById("opsys").innerHTML = "<p>OS: " + measdata.OS + "</p>"
@@ -16,4 +22,9 @@ fetch('/result')
     document.getElementById("maxlat").innerHTML = measdata.network_latency.max
     document.getElementById("avglat").innerHTML = measdata.network_latency.avg
     })
+}
 
+function logout() {
+    sessionStorage.clear();
+    window.location.reload();
+  }

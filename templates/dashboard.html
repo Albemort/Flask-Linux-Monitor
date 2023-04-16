@@ -10,7 +10,6 @@
     <title>Monitor</title>
     <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{url_for('static', filename='css/dashboard.css')}}" rel="stylesheet">
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script>
       // Check if the JWT token exists in localStorage
       const Token = sessionStorage.getItem('token');
@@ -20,15 +19,9 @@
           window.location.href = '/login';
       }
     </script>
-    <script>
-      function logout() {
-        sessionStorage.clear();
-        window.location.reload();
-      }
-    </script>
   </head>
 
-  <body>
+  <body onload="getData()">
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -139,7 +132,7 @@
           <div class="row placeholders">
             <div class="refresh">
               <ul class="nav navbar-nav navbar-left">
-                <button type="button" onclick="" class="btn btn-primary">Refresh</button>
+                <button type="button" onclick="getData()" class="btn btn-primary">Refresh</button>
               </ul>
             </div>
         </div>
