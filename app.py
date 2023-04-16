@@ -23,10 +23,12 @@ class User(db.Model):
     name = db.Column(db.String(100), unique=False, nullable=False)
     password = db.Column(db.String(200), primary_key=False, unique=False, nullable=False)
 
+    # Create password for the user
     def set_password(self, password):
         """Create hashed password."""
         self.password = generate_password_hash(password, method='sha256')
 
+    # Check the hashed password in the db
     def check_password(self, password):
         """Check hashed password."""
         return check_password_hash(self.password, password)
