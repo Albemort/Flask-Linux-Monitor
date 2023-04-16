@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///userdb.db'
 db = SQLAlchemy(app)
 getdata = Monitor()
-getdata.get_statistics()
+#getdata.get_statistics()
 data = readfile()
 
 # Secret key for JWT
@@ -34,11 +34,14 @@ class User(db.Model):
         return check_password_hash(self.password, password)
 
 with app.app_context():
+    # Delete any previous users
     try:
         db.session.query(User).delete()
         db.session.commit()
+    # Handle if the db doesn't exist
     except:
-        db.create_all() 
+        db.create_all()
+    # Finally create our admin user
     finally:
         user = User(
         name="admin" # Default username
@@ -71,14 +74,15 @@ def result():
     data.__init__()
     return data.measurements
 
-## Get new data from the linux server as a POST req
+## Get new data from the linux server as a POST request
+## Calls monitor.py
 @app.route('/result/refresh', methods=['POST'])
 def refresh():
     getdata.get_statistics()
     return "OK", 200
 
 
-# Example login route
+# Login route and token
 @app.route('/login', methods=['POST'])
 def login():
     # Get the username and password from the request
@@ -100,4 +104,4 @@ def login():
 
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
