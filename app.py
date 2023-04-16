@@ -34,19 +34,20 @@ class User(db.Model):
         return check_password_hash(self.password, password)
 
 with app.app_context():
-    db.session.query(User).delete()
-    db.session.commit()
+    try:
+        db.session.query(User).delete()
+        db.session.commit()
+    except:
+        db.create_all() 
+    finally:
+        user = User(
+        name="admin" # Default username
+        )
 
-    db.create_all() 
+        user.set_password("password") # Default password
 
-    user = User(
-    name="admin" # Default username
-    )
-
-    user.set_password("password") # Default password
-
-    db.session.add(user)
-    db.session.commit()
+        db.session.add(user)
+        db.session.commit()
 
 ## Route for login page
 @app.route('/login', methods=['GET'])
